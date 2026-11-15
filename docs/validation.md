@@ -39,3 +39,28 @@ Una invocación adicional de pytest sin activar el entorno mezcló Python 3.11 d
 ## Configuración del entorno guardada
 
 Se guardaron `install_script`, `start_skill` y adiciones de dominios UCI/GitHub API en el borrador de configuración del entorno. La selección de repositorios no se modificó. Revisar y guardar en ajustes, y publicar el entorno para activar la nueva configuración/snapshot. Guardar el borrador no aplica la política ni demuestra restauración en una tarea nueva.
+
+## Repetir la validación local
+
+### Preparar datos y ejecutar pruebas
+
+Python 3.11 y Java 17 recomendados; la sesión también validó Spark en Java 21. No sustituye la entrega cloud.
+
+```bash
+python3.11 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.lock
+# Conseguir CSV oficial; si UCI está bloqueado, copia pública explícita:
+git clone https://github.com/BilalSikander/ai4i2020.git /tmp/ai4i-review
+git -C /tmp/ai4i-review checkout 65331f7f004e8627d1d5ca908fce0702738b80c2
+python scripts/validate_local.py /tmp/ai4i-review/ai4i2020.csv
+SPARK_LOCAL_IP=127.0.0.1 spark-submit --master 'local[2]' spark/build_obt.py --local --path "$PWD/artifacts"
+SPARK_LOCAL_IP=127.0.0.1 pytest -q
+python scripts/cost_sensitivity.py
+```
+
+`validate_local.py` usa el mismo SQL dbt con un adaptador JSON distinto y exporta Gold a Parquet. La rama Snowflake y su autenticación todavía requieren prueba real. Los tests negativos rechazan dimensiones duplicadas y joins huérfanos. No usar los subtipos TWF/HDF/PWF/OSF/RNF como predictoras; tampoco UDI, Product ID, etiqueta, hash o alerta base. La lista autorizada está en `spark/build_obt.py:FEATURES`; la OBT incluye target y campos de auditoría separados conceptualmente.
+
+### Prueba Kestra local con retry
+
+Después de la validación local descrita arriba, copiar el CSV validado a `artifacts/validation_ai4i.csv` e importar `kestra/flows/local_validation.yml` en Kestra. Ejecutar `ai4i_local_validation`: el primer intento falla deliberadamente (exit 75); el segundo perfila el CSV y ejecuta dbt y Spark sobre Raw local ya preparado. No prueba carga Raw Snowflake. Su estado final comprobado fue SUCCESS con dos intentos; ver `docs/kestra_local_results.json`.
