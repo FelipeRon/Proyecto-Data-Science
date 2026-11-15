@@ -21,8 +21,8 @@ Revisión: 15 de noviembre de 2026. **Cumplimiento parcial: implementación y va
 | OBT almacenada nuevamente en Snowflake | Rama Snowflake del job, `docs/snowflake_setup.sql` | **Pendiente de ejecución** |
 | Cuándo usar estrella y OBT | Memo §4 | Cumple |
 | Batch justificado; condiciones para streaming sin implementarlo | Memo §6 | Cumple |
-| Memo técnico ≤6 páginas, 7 temas requeridos | `docs/PSet2_memo_Ron.pdf` | Cumple extensión: 6 páginas; incluye arquitectura, ingesta, calidad, transformaciones, OBT, batch y limitaciones |
-| Nombre `PSet2_memo_<apellido_1>_<apellido_2>.pdf` | Archivo usa solo `Ron` | Falta segundo apellido si corresponde; no se inventó uno. Renombrar cuando el autor lo facilite |
+| Memo técnico ≤6 páginas, 7 temas requeridos | `docs/PSet2_memo_Ron_Andrade.pdf` | Cumple extensión: 6 páginas; incluye arquitectura, ingesta, calidad, transformaciones, OBT, batch y limitaciones |
+| Nombre `PSet2_memo_<apellido_1>_<apellido_2>.pdf` | `PSet2_memo_Ron_Andrade.pdf` | Cumple: apellidos Ron Andrade |
 | Estructura, README reproducible y plantilla de entorno | Raíz, `kestra/`, `dbt/`, `spark/`, `docs/`, `.env.example` | Cumple estructura; reproducción cloud requiere cuenta/llave y acceso de red |
 | No publicar credenciales | `.gitignore`, `.dockerignore`; solo plantilla versionada | `.env`, secretos, datos y entorno virtual excluidos del commit |
 
@@ -33,6 +33,5 @@ Revisión: 15 de noviembre de 2026. **Cumplimiento parcial: implementación y va
 3. Ejecutar el flow principal de Kestra y obtener Raw, Bronze, Silver, Gold y OBT reales en Snowflake.
 4. Repetir mismo snapshot/replay sin duplicados y documentar un retry de ingesta cloud.
 5. Conciliar conteos, claves y etiquetas por capa, conservar evidencia sin secretos y habilitar el schedule después de validar.
-6. Confirmar el nombre final del PDF según los apellidos del autor.
 
 Ver `validation.md` para separar resultados ejecutados de pendientes. La prueba local de Kestra utiliza Raw DuckDB previamente preparado y no demuestra carga Raw en Snowflake. Subir el repositorio a GitHub tampoco constituye esa validación.

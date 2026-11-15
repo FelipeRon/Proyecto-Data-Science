@@ -1,6 +1,6 @@
 # PSet 2 — Pipeline de mantenimiento: AI4I
 
-Autor: Felipe Ron. Entrega: [documento técnico](docs/PSet2_memo_Ron.pdf).
+Autor: Felipe Ron Andrade. Entrega: [documento técnico](docs/PSet2_memo_Ron_Andrade.pdf).
 Implementación para **detectar falla en la lectura actual**. AI4I no permite predecir el siguiente ciclo, medir anticipación, estimar RUL ni identificar series de una misma máquina.
 
 `UCI → Kestra → Snowflake RAW → dbt BRONZE → SILVER → GOLD → Spark → Snowflake OBT`
@@ -12,7 +12,7 @@ Consulta la [revisión requisito por requisito](docs/cumplimiento.md): la entreg
 ## Estado verificado y pendientes
 
 - Validación local con copia pública de 10.000 registros: 6 modelos dbt + 14 tests pasan sobre DuckDB. Spark conserva 10.000 filas/IDs y persiste Parquet. Ver [evidencia](docs/validation.md).
-- Snowflake **pendiente**: cuenta indicada `MRIWLBX-HH95628`; faltan usuario de servicio y llave autorizada. No se ha creado ningún objeto en esa cuenta.
+- Snowflake **pendiente**: configurar la cuenta propia, el usuario de servicio y la llave autorizada siguiendo la guía. La ejecución cloud sigue pendiente de validación.
 - Kestra arrancado; flow principal validado/importado. Una prueba local aprobó dbt/Spark y retry real en contenedores. Conectores y ejecución end-to-end Snowflake pendientes. Añadir la evidencia real antes de entregar.
 - Descarga oficial UCI bloqueada por red en esta sesión. Se guardó un borrador para permitir `archive.ics.uci.edu` y `api.github.com` en configuración del entorno; revisar, guardar y publicar para usarla. Agregar también el hostname exacto de la cuenta Snowflake si se ejecuta con red restringida. Guardar el borrador no aplica la política a la máquina actual.
 
@@ -22,18 +22,7 @@ Seguir la [guía de conexión a Snowflake en Snowsight](docs/snowflake_connectio
 
 Docker con Compose, 6 GB RAM y salida HTTPS a UCI, Snowflake, Docker Hub, PyPI, Debian y Maven Central. El job Spark usa Java 17 en su imagen, 2 cores y Spark 3.5.3/Scala 2.12; no hace falta un clúster para 10.000 filas.
 
-```bash
-cp .env.example .env
-mkdir -p secrets artifacts
-# Editar .env: cuenta, usuario, rol, warehouse, claves locales de Kestra
-# y HOST_PROJECT_DIR con la ruta ABSOLUTA del checkout en el host de Docker.
-openssl genrsa -out secrets/private.pem 2048
-openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in secrets/private.pem -out secrets/snowflake_key.p8
-openssl rsa -in secrets/private.pem -pubout -out secrets/snowflake_key.pub
-chmod 600 secrets/*.pem secrets/*.p8
-```
-
-Registrar SOLO la llave pública en Snowflake. El administrador adapta y ejecuta `docs/snowflake_setup.sql`, sustituyendo el marcador de llave pública antes de crear/configurar el usuario `PSET2_SVC`. Mantener la llave privada y `.env` fuera de Git. Usar cuenta de formato `organización-cuenta`; no incluir esquema HTTPS ni sufijo en SNOWFLAKE_ACCOUNT. No hay contraseña Snowflake ni secretos en código. Las contraseñas de ejemplo deben reemplazarse antes de iniciar Kestra. El socket Docker permite administrar contenedores: usar solo en entorno local aislado.
+Completar los pasos 1–3 de la [guía de conexión](docs/snowflake_connection.md): preparar o reutilizar llaves, ejecutar `docs/snowflake_setup.sql` en Snowsight y completar `.env`. Sustituir `organization-account` por el identificador obtenido en tu cuenta. No sobrescribir archivos `.env` ni llaves existentes. Registrar solo la pública; mantener la privada fuera de Git. Completar también las contraseñas locales y `HOST_PROJECT_DIR` con la ruta absoluta del checkout en el host Docker.
 
 ## 2. Construir y arrancar
 
@@ -55,6 +44,19 @@ set -a; . ./.env; set +a
 python scripts/deploy_kestra.py
 ```
 
+### Recorrido completo del PSet 2
+
+1. Completar la guía de conexión, construir la imagen y arrancar los servicios con los comandos anteriores.
+2. Ejecutar la consulta autenticada y `dbt debug` del paso 4 de la guía. Confirmar `PSET2_SVC`, `PSET2_ROLE`, `PSET2_WH` y `PSET2`.
+3. Importar `kestra/flows/pipeline.yml` en Kestra y ejecutar `ai4i_pipeline` con `historical_snapshot` vacío. Esperar `SUCCESS`: descarga UCI → Raw → dbt Bronze/Silver/Gold y tests → Spark OBT en Snowflake.
+4. Ejecutar las consultas del paso 4 de este README; comparar hash, conteos y claves en las cinco capas con la fuente de esa corrida. No usar una OBT anterior como evidencia de una corrida fallida.
+5. Repetir el flow con el mismo archivo y comprobar que no acumule duplicados. Probar el backfill completo/replay según el paso 3 de este README: CSV histórico en `artifacts/` y parámetro `historical_snapshot`.
+6. Probar el mecanismo de retry con `kestra/flows/local_validation.yml` según la sección de prueba local. Conservar sus dos intentos; esa prueba no reemplaza la validación cloud. Documentar también los reintentos reales de ingesta cloud cuando ocurran.
+7. Habilitar el schedule solo tras validar la carga: cambiar `disabled: true` a `disabled: false` en `weekly_snapshot_check`, reimportar y confirmar cron/zona horaria en Kestra.
+8. Guardar estados/logs de Kestra, resultados de dbt y consultas Snowflake sin secretos en `docs/`. Actualizar `validation.md` y `cumplimiento.md` con los resultados reales antes de entregar el memo.
+
+La configuración permite seguir este recorrido con tu cuenta; no acredita una ejecución cloud previa. Los diagramas, el memo y la justificación batch se encuentran en `docs/`.
+
 ## 3. Ejecutar las piezas por separado
 
 ```bash
@@ -71,6 +73,8 @@ Una carga fallida no borra Raw anterior. Un fallo dbt bloquea Spark; Gold y OBT 
 
 ```sql
 SELECT FILE_SHA256, COUNT(*), MAX(LOADED_AT) FROM PSET2.RAW.AI4I GROUP BY 1;
+SELECT COUNT(*) FROM PSET2.BRONZE.STG_READINGS;
+SELECT COUNT(*) FROM PSET2.SILVER.INT_READINGS;
 SELECT COUNT(*) FROM PSET2.SILVER.INT_QUARANTINE;
 SELECT COUNT(*), COUNT(DISTINCT READING_ID), SUM(MACHINE_FAILURE) FROM PSET2.GOLD.FCT_READING;
 SELECT COUNT(*), COUNT(DISTINCT READING_ID), SUM(MACHINE_FAILURE) FROM PSET2.OBT.OBT_READINGS;
@@ -103,10 +107,10 @@ Después de la validación local del paso 5, copiar el CSV validado a `artifacts
 
 ## Documento y decisiones
 
-- [Memo editable, seis páginas](docs/PSet2_memo_Ron.md)
+- [Memo editable, seis páginas](docs/PSet2_memo_Ron_Andrade.md)
 - [Respuesta a comentarios del PSet 1](docs/feedback.md)
 - [Métricas de calidad](docs/quality_results.json), [regla base](docs/baseline_results.json), [sensibilidad de costos](docs/cost_sensitivity.csv), [capacidad](docs/capacity_sensitivity.csv)
 - [Fuentes y atribución](docs/references.md)
 - [Modelo dimensional](docs/star.png)
 
-Regenerar PDF desde `docs/`: `pandoc PSet2_memo_Ron.md -o PSet2_memo_Ron.pdf --pdf-engine=xelatex`. Solo se dispone del apellido Ron; ajustar el nombre si la entrega exige dos apellidos.
+Regenerar PDF desde `docs/`: `pandoc PSet2_memo_Ron_Andrade.md -o PSet2_memo_Ron_Andrade.pdf --pdf-engine=xelatex`.

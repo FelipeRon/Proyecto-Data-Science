@@ -1,6 +1,6 @@
 ---
 title: "PSet 2: Pipeline de datos para mantenimiento"
-author: "Felipe Ron · Ciencia de Datos"
+author: "Felipe Ron Andrade · Ciencia de Datos"
 date: "15 de noviembre de 2026"
 lang: es
 fontsize: 10pt
@@ -20,7 +20,7 @@ El destino previsto es la base `PSET2` en Snowflake, con esquemas Raw, Bronze, S
 
 Raw conserva strings originales en JSON, hash SHA-256 del CSV, fila fuente, URL y fecha de carga. Bronze tipa, Silver aplica contratos y separa cuarentena; Gold contiene el hecho de lecturas y una dimensión de tipo de producto. Spark construye la tabla ancha con features, target y trazabilidad. La fecha de carga es técnica, nunca una fecha de observación inventada.
 
-**Evidencia y alcance.** Se ejecutaron las transformaciones con dbt/DuckDB y la OBT con Spark sobre una copia pública de AI4I. No se ejecutó el pipeline completo en Snowflake. Kestra validó/importó el flow principal y ejecutó una prueba local dbt/Spark con retry real de dos intentos. La cuenta indicada es `MRIWLBX-HH95628`; faltan usuario y llave autorizada. Los resultados locales no equivalen a objetos creados en la nube. `validation.md` registra resultados y límites de esta sesión.
+**Evidencia y alcance.** Se ejecutaron las transformaciones con dbt/DuckDB y la OBT con Spark sobre una copia pública de AI4I. No se ejecutó el pipeline completo en Snowflake. Kestra validó/importó el flow principal y ejecutó una prueba local dbt/Spark con retry real de dos intentos. Cada usuario debe configurar su cuenta y llave autorizada siguiendo el README. Los resultados locales no equivalen a objetos creados en la nube. `validation.md` registra resultados y límites de esta sesión.
 
 La estructura toma como referencia xGerart/pset_2. Su ERP, ventas, capturas y conclusiones no se trasladan al proyecto. El código fue escrito para AI4I; las fuentes y commits consultados constan en `references.md`.
 

@@ -1,10 +1,10 @@
 # Conectar el proyecto a Snowflake desde cero
 
-Esta guía prepara la cuenta y verifica la conexión; no implica que ya se haya ejecutado contra Snowflake. Cuenta indicada por el autor: `MRIWLBX-HH95628`; confirmar el identificador con la consulta del paso 2.
+Esta guía prepara la cuenta y verifica la conexión; no implica que ya se haya ejecutado contra Snowflake. Obtener el identificador de tu propia cuenta con la consulta del paso 2.
 
 ## 1. Preparar el par de llaves en tu equipo
 
-Si ya tienes una llave privada y registraste su pública, conserva ese par: no lo reemplaces por uno nuevo. La llave pública compartida en el chat puede usarse **solo si tienes su privada correspondiente**. Conocer una pública no permite conectarse ni reconstruir la privada.
+Si ya tienes una llave privada y registraste su pública, conserva ese par: no lo reemplaces por uno nuevo. Una llave pública puede usarse **solo si tienes su privada correspondiente**. Conocer una pública no permite conectarse ni reconstruir la privada.
 
 Si todavía no tienes un par, desde la raíz, con rutas nuevas (no sobrescribir archivos existentes):
 
@@ -45,7 +45,7 @@ Raw **no es append-only estricto** en esta implementación: conserva snapshots d
 Copiar `.env.example` a `.env` solo si no existe; editar sin publicar valores privados:
 
 ```dotenv
-SNOWFLAKE_ACCOUNT=MRIWLBX-HH95628
+SNOWFLAKE_ACCOUNT=organization-account
 SNOWFLAKE_USER=PSET2_SVC
 SNOWFLAKE_ROLE=PSET2_ROLE
 SNOWFLAKE_WAREHOUSE=PSET2_WH

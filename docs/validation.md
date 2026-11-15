@@ -29,7 +29,7 @@ Una invocación adicional de pytest sin activar el entorno mezcló Python 3.11 d
 
 ## Pendiente para completar el PSet cloud
 
-- Usuario Snowflake, llave pública registrada/privada local segura, rol y warehouse autorizados en `MRIWLBX-HH95628`.
+- Usuario Snowflake, llave pública registrada/privada local segura, rol y warehouse autorizados en la cuenta propia.
 - Autorizar red a UCI y al hostname exacto de Snowflake; configurar confianza/proxy de clientes Python y Java si corresponde.
 - Ejecutar ingesta oficial, dbt-Snowflake y Spark-Snowflake; demostrar Raw/Bronze/Silver/Gold/OBT con SQL real.
 - Probar idempotencia/replay del hash y retry de la ingesta cloud; el retry local solo valida el mecanismo de orquestación.
