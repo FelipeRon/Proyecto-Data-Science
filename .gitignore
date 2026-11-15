@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+.venv/
+secrets/
+data/
+artifacts/
+__pycache__/
+.pytest_cache/
+**/target/
+**/logs/
+*.duckdb*

@@ -1,0 +1,5 @@
+digraph G {rankdir=LR; node [shape=record,fontname="Helvetica",fontsize=11];
+dim [label="DIM_PRODUCT_TYPE|PK product_type|quality_tier"];
+fact [label="FCT_READING|PK reading_id (UDI)|FK product_type|sensores + features|machine_failure (target)|baseline_alert (auditoría)|file_sha256 + source_row"];
+dim -> fact [label="1 : N"];
+}

@@ -1,0 +1,86 @@
+{
+  "scope": "local DuckDB; not Snowflake",
+  "dbt_version": "1.9.1",
+  "results": [
+    {
+      "unique_id": "model.ai4i.stg_readings",
+      "status": "success"
+    },
+    {
+      "unique_id": "test.ai4i.not_null_stg_readings_file_sha256.161e4b6274",
+      "status": "pass"
+    },
+    {
+      "unique_id": "model.ai4i.int_quality",
+      "status": "success"
+    },
+    {
+      "unique_id": "model.ai4i.int_quarantine",
+      "status": "success"
+    },
+    {
+      "unique_id": "model.ai4i.int_readings",
+      "status": "success"
+    },
+    {
+      "unique_id": "test.ai4i.quarantine_empty",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.ai4i.accepted_values_int_readings_machine_failure__False__0__1.1e63c765cf",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.ai4i.not_null_int_readings_reading_id.a324342723",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.ai4i.not_null_int_readings_machine_failure.be55b76a88",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.ai4i.unique_int_readings_reading_id.7f86cf29ad",
+      "status": "pass"
+    },
+    {
+      "unique_id": "model.ai4i.dim_product_type",
+      "status": "success"
+    },
+    {
+      "unique_id": "model.ai4i.fct_reading",
+      "status": "success"
+    },
+    {
+      "unique_id": "test.ai4i.not_null_dim_product_type_product_type.06b6fd9d15",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.ai4i.unique_dim_product_type_product_type.cfe56ab99c",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.ai4i.not_null_fct_reading_product_type.78ec68b513",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.ai4i.conservation",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.ai4i.not_null_fct_reading_reading_id.e33836da8b",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.ai4i.physical_contract",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.ai4i.relationships_fct_reading_product_type__product_type__ref_dim_product_type_.c9b4180199",
+      "status": "pass"
+    },
+    {
+      "unique_id": "test.ai4i.unique_fct_reading_reading_id.31885acb7f",
+      "status": "pass"
+    }
+  ]
+}

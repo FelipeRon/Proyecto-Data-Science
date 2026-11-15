@@ -1,0 +1,18 @@
+digraph G {
+ rankdir=LR; bgcolor="white"; nodesep=0.2; ranksep=0.3;
+ node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, margin="0.12,0.10", fillcolor="#eef2f6"];
+ edge [color="#475569", arrowsize=0.7];
+ source [label="UCI AI4I\nCSV estático",fillcolor="#fff4d6"];
+ kestra [label="Kestra + runner\nDocker\ningesta / orquestación",fillcolor="#dceeff"];
+ raw [label="RAW\nSnowflake\nJSON + hash"];
+ bronze [label="BRONZE\nSnowflake\nstaging tipado"];
+ silver [label="SILVER\nSnowflake\nlimpieza / cuarentena"];
+ gold [label="GOLD\nSnowflake\nestrella"];
+ spark [label="Spark local[2]\nDocker\njoin + validación",fillcolor="#dceeff"];
+ obt [label="OBT\nSnowflake\nlecturas + features"];
+ source -> kestra -> raw;
+ raw -> bronze [label="dbt"];
+ bronze -> silver [label="dbt"];
+ silver -> gold [label="dbt"];
+ gold -> spark -> obt;
+}

@@ -1,0 +1,30 @@
+id: ai4i_local_validation
+namespace: pset2
+description: Local smoke only; injected first-attempt failure tests retry. Does not access Snowflake.
+tasks:
+  - id: local_pipeline
+    type: io.kestra.plugin.scripts.shell.Commands
+    containerImage: ai4i-runner:1
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+      pullPolicy: NEVER
+      volumes:
+        - "{{ envs.host_project_dir }}/artifacts:/app/artifacts"
+    env:
+      SOURCE_CSV: /app/artifacts/validation_ai4i.csv
+      PROFILE_ONLY: "1"
+      DBT_TARGET: local
+      LOCAL_DB_PATH: /app/artifacts/local.duckdb
+      DBT_SEND_ANONYMOUS_USAGE_STATS: "false"
+      EXECUTION_ID: "{{ execution.id }}"
+    commands:
+      - set -eu
+      - 'if [ ! -f "/app/artifacts/retry_${EXECUTION_ID}" ]; then touch "/app/artifacts/retry_${EXECUTION_ID}"; echo "Injected first-attempt failure"; exit 75; fi'
+      - python /app/kestra/scripts/ingest.py
+      - cd /app/dbt && dbt build --profiles-dir /app/dbt
+      - cd /app && spark-submit --master 'local[2]' spark/build_obt.py --local --path /app/artifacts
+    timeout: PT5M
+    retry:
+      type: constant
+      interval: PT1S
+      maxAttempts: 2

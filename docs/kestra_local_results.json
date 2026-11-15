@@ -1,0 +1,132 @@
+{
+  "execution_id": "6vRf1ptkrAky8xkTOxfm5S",
+  "flow_id": "ai4i_local_validation",
+  "namespace": "pset2",
+  "state": {
+    "current": "SUCCESS",
+    "histories": [
+      {
+        "state": "CREATED",
+        "date": "2026-11-15T20:43:38.625988Z"
+      },
+      {
+        "state": "RUNNING",
+        "date": "2026-11-15T20:43:38.951198Z"
+      },
+      {
+        "state": "FAILED",
+        "date": "2026-11-15T20:43:55.546237Z"
+      },
+      {
+        "state": "RETRYING",
+        "date": "2026-11-15T20:43:55.548249Z"
+      },
+      {
+        "state": "RUNNING",
+        "date": "2026-11-15T20:43:57.254316Z"
+      },
+      {
+        "state": "SUCCESS",
+        "date": "2026-11-15T20:44:25.384226Z"
+      }
+    ],
+    "duration": "PT46.758238S",
+    "endDate": "2026-11-15T20:44:25.384226Z",
+    "startDate": "2026-11-15T20:43:38.625988Z"
+  },
+  "tasks": [
+    {
+      "id": "local_pipeline",
+      "state": {
+        "current": "SUCCESS",
+        "histories": [
+          {
+            "state": "CREATED",
+            "date": "2026-11-15T20:43:38.940676Z"
+          },
+          {
+            "state": "SUBMITTED",
+            "date": "2026-11-15T20:43:38.997725Z"
+          },
+          {
+            "state": "RUNNING",
+            "date": "2026-11-15T20:43:39.442863Z"
+          },
+          {
+            "state": "FAILED",
+            "date": "2026-11-15T20:43:55.418249Z"
+          },
+          {
+            "state": "RETRYING",
+            "date": "2026-11-15T20:43:55.548238Z"
+          },
+          {
+            "state": "CREATED",
+            "date": "2026-11-15T20:43:57.254304Z"
+          },
+          {
+            "state": "SUBMITTED",
+            "date": "2026-11-15T20:43:57.289111Z"
+          },
+          {
+            "state": "RUNNING",
+            "date": "2026-11-15T20:43:57.310470Z"
+          },
+          {
+            "state": "SUCCESS",
+            "date": "2026-11-15T20:44:25.201147Z"
+          }
+        ],
+        "duration": "PT46.260471S",
+        "endDate": "2026-11-15T20:44:25.201147Z",
+        "startDate": "2026-11-15T20:43:38.940676Z"
+      },
+      "attempts": [
+        {
+          "state": {
+            "current": "FAILED",
+            "histories": [
+              {
+                "state": "CREATED",
+                "date": "2026-11-15T20:43:39.447193Z"
+              },
+              {
+                "state": "RUNNING",
+                "date": "2026-11-15T20:43:39.447197Z"
+              },
+              {
+                "state": "FAILED",
+                "date": "2026-11-15T20:43:55.414398Z"
+              }
+            ],
+            "duration": "PT15.967205S",
+            "endDate": "2026-11-15T20:43:55.414398Z",
+            "startDate": "2026-11-15T20:43:39.447193Z"
+          }
+        },
+        {
+          "state": {
+            "current": "SUCCESS",
+            "histories": [
+              {
+                "state": "CREATED",
+                "date": "2026-11-15T20:43:57.311300Z"
+              },
+              {
+                "state": "RUNNING",
+                "date": "2026-11-15T20:43:57.311302Z"
+              },
+              {
+                "state": "SUCCESS",
+                "date": "2026-11-15T20:44:25.199042Z"
+              }
+            ],
+            "duration": "PT27.887742S",
+            "endDate": "2026-11-15T20:44:25.199042Z",
+            "startDate": "2026-11-15T20:43:57.311300Z"
+          }
+        }
+      ]
+    }
+  ]
+}
