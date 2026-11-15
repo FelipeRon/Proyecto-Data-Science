@@ -40,7 +40,7 @@ errors:
     message: "Falló {{ execution.id }}; revisar RAW, dbt y logs Spark. No publicar resultados de esta ejecución."
 triggers:
   - id: weekly_snapshot_check
-    disabled: true
+    disabled: false
     type: io.kestra.plugin.core.trigger.Schedule
     cron: "0 6 * * 1"
     timezone: America/Guayaquil
