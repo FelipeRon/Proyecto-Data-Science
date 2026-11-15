@@ -9,7 +9,7 @@ ai4i:
       role: "{{ env_var('SNOWFLAKE_ROLE', 'PSET2_ROLE') }}"
       warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'PSET2_WH') }}"
       database: "{{ env_var('SNOWFLAKE_DATABASE', 'PSET2') }}"
-      schema: PUBLIC
+      schema: BRONZE
       threads: 2
     local:
       type: duckdb

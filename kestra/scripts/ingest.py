@@ -69,7 +69,6 @@ def main():
     from common import connect
     with connect() as conn:
         cur=conn.cursor()
-        cur.execute('CREATE SCHEMA IF NOT EXISTS RAW')
         cur.execute("""CREATE TABLE IF NOT EXISTS RAW.AI4I (
             FILE_SHA256 VARCHAR, SOURCE_ROW INTEGER, SOURCE_URL VARCHAR,
             LOADED_AT TIMESTAMP_TZ, PAYLOAD VARIANT)""")

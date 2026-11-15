@@ -18,6 +18,8 @@ Consulta la [revisión requisito por requisito](docs/cumplimiento.md): la entreg
 
 ## 1. Configuración y credenciales
 
+Seguir la [guía de conexión a Snowflake en Snowsight](docs/snowflake_connection.md): monitor de créditos, usuario `PSET2_SVC`, par de llaves y comprobaciones.
+
 Docker con Compose, 6 GB RAM y salida HTTPS a UCI, Snowflake, Docker Hub, PyPI, Debian y Maven Central. El job Spark usa Java 17 en su imagen, 2 cores y Spark 3.5.3/Scala 2.12; no hace falta un clúster para 10.000 filas.
 
 ```bash
@@ -31,7 +33,7 @@ openssl rsa -in secrets/private.pem -pubout -out secrets/snowflake_key.pub
 chmod 600 secrets/*.pem secrets/*.p8
 ```
 
-Registrar SOLO la llave pública en Snowflake. El administrador adapta y ejecuta `docs/snowflake_setup.sql`, incluida creación del usuario y asignación del rol (comentadas deliberadamente hasta registrar la llave). Mantener la llave privada y `.env` fuera de Git. Usar cuenta de formato `organización-cuenta`; no incluir esquema HTTPS ni sufijo en SNOWFLAKE_ACCOUNT. No hay contraseña Snowflake ni secretos en código. Las contraseñas de ejemplo deben reemplazarse antes de iniciar Kestra. El socket Docker permite administrar contenedores: usar solo en entorno local aislado.
+Registrar SOLO la llave pública en Snowflake. El administrador adapta y ejecuta `docs/snowflake_setup.sql`, sustituyendo el marcador de llave pública antes de crear/configurar el usuario `PSET2_SVC`. Mantener la llave privada y `.env` fuera de Git. Usar cuenta de formato `organización-cuenta`; no incluir esquema HTTPS ni sufijo en SNOWFLAKE_ACCOUNT. No hay contraseña Snowflake ni secretos en código. Las contraseñas de ejemplo deben reemplazarse antes de iniciar Kestra. El socket Docker permite administrar contenedores: usar solo en entorno local aislado.
 
 ## 2. Construir y arrancar
 
