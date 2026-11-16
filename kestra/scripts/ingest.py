@@ -73,16 +73,21 @@ def main():
             FILE_SHA256 VARCHAR, SOURCE_ROW INTEGER, SOURCE_URL VARCHAR,
             LOADED_AT TIMESTAMP_TZ, PAYLOAD VARIANT)""")
         # Staging DDL precedes transaction; failed inserts cannot erase previous data.
-        cur.execute('CREATE TEMP TABLE RAW.STAGE_AI4I LIKE RAW.AI4I')
+        cur.execute("""CREATE TEMP TABLE RAW.STAGE_AI4I (
+            FILE_SHA256 VARCHAR, SOURCE_ROW INTEGER, SOURCE_URL VARCHAR,
+            LOADED_AT TIMESTAMP_TZ, PAYLOAD VARCHAR)""")
         timestamp=datetime.now(timezone.utc).isoformat()
-        cur.executemany('INSERT INTO RAW.STAGE_AI4I SELECT %s,%s,%s,TO_TIMESTAMP_TZ(%s),PARSE_JSON(%s)',
+        cur.executemany('INSERT INTO RAW.STAGE_AI4I VALUES (%s,%s,%s,%s,%s)',
             [(sha,i,source,timestamp,json.dumps(row)) for i,row in enumerate(rows,1)])
         cur.execute('SELECT COUNT(*) FROM RAW.STAGE_AI4I')
         if cur.fetchone()[0] != len(rows): raise ValueError('RAW staging count mismatch')
         cur.execute('BEGIN')
         try:
             cur.execute('DELETE FROM RAW.AI4I WHERE FILE_SHA256=%s',(sha,))
-            cur.execute('INSERT INTO RAW.AI4I SELECT * FROM RAW.STAGE_AI4I')
+            cur.execute("""INSERT INTO RAW.AI4I
+                (FILE_SHA256, SOURCE_ROW, SOURCE_URL, LOADED_AT, PAYLOAD)
+                SELECT FILE_SHA256, SOURCE_ROW, SOURCE_URL, LOADED_AT, PARSE_JSON(PAYLOAD)
+                FROM RAW.STAGE_AI4I""")
             cur.execute('COMMIT')
         except Exception:
             cur.execute('ROLLBACK'); raise
