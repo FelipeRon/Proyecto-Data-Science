@@ -3,7 +3,7 @@ namespace: pset2
 inputs:
   - id: historical_snapshot
     type: STRING
-    defaults: ""
+    required: false
     description: Optional CSV path under artifacts for replay; empty downloads current public snapshot.
 concurrency:
   limit: 1
@@ -20,7 +20,7 @@ tasks:
         - "{{ envs.host_project_dir }}/secrets:/run/secrets:ro"
         - "{{ envs.host_project_dir }}/.env:/app/runtime.env:ro"
     env:
-      SOURCE_CSV: "{{ inputs.historical_snapshot }}"
+      SOURCE_CSV: "{{ inputs.historical_snapshot ?? '' }}"
     commands:
       - set -eu
       - set -a; . /app/runtime.env; set +a
